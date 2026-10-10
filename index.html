@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nonvi – Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FBF8F1;--card:#fff;--ink:#1B1B18;--mut:#5E584C;--bd:#ECE6D8;--g:#0B7A4B;--on:#fff;--y:#F2B705;--soft:#F3EEDF;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141412;--card:#1F1F1C;--ink:#F3EFE4;--mut:#B5AFA0;--bd:#33312B;--g:#3DBE86;--on:#0B1F15;--soft:#2A2823}}
+:root[data-theme="dark"]{--bg:#141412;--card:#1F1F1C;--ink:#F3EFE4;--mut:#B5AFA0;--bd:#33312B;--g:#3DBE86;--on:#0B1F15;--soft:#2A2823}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:400 15px/1.4 'DM Sans',system-ui,sans-serif}
+#app{max-width:480px;margin:0 auto;height:100%;display:flex;flex-direction:column}
+header{padding:28px 20px 16px}h1{margin:0;font-size:28px;color:var(--g)}.sub{font-size:13px;color:var(--mut)}
+main{flex:1;overflow-y:auto;padding:8px 20px 16px;display:flex;flex-direction:column;gap:12px}
+nav{display:flex;border-top:1px solid var(--bd);background:var(--card)}
+nav button{flex:1;min-height:48px;border:0;background:none;color:var(--mut);font:500 13px 'DM Sans',sans-serif}
+nav button.on{color:var(--g);font-weight:700}
+.c{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px;text-align:left;color:var(--ink);font:inherit;width:100%}
+button.c{cursor:pointer}
+.row{display:flex;gap:8px;align-items:center}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px}
+.chip{flex:none;min-height:44px;padding:0 16px;border-radius:22px;border:1px solid var(--bd);background:var(--card);color:var(--ink);font:500 14px 'DM Sans',sans-serif}
+.chip.on{background:var(--g);border-color:var(--g);color:var(--on)}
+.btn{min-height:48px;border:0;border-radius:24px;background:var(--g);color:var(--on);font:700 16px 'DM Sans',sans-serif;padding:0 20px}
+.out{display:inline-flex;align-items:center;gap:6px;flex:none;min-height:44px;padding:0 14px;border-radius:22px;border:1px solid var(--g);background:var(--card);color:var(--g);font:700 14px 'DM Sans',sans-serif}
+.out.on{background:var(--g);color:var(--on)}
+input,textarea,select{width:100%;min-height:44px;border:1px solid var(--bd);border-radius:12px;background:var(--card);color:var(--ink);padding:0 14px;font:400 15px 'DM Sans',sans-serif}
+textarea{padding:10px 14px;min-height:80px;resize:none}
+label{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:500;color:var(--mut)}
+.tag{font-size:13px;font-weight:700;padding:3px 10px;border-radius:10px;background:var(--soft);color:var(--ink)}
+.tag.p{background:var(--g);color:var(--on)}.tag.n{background:var(--y);color:#1B1B18}
+.av{width:40px;height:40px;border-radius:20px;background:var(--g);color:var(--on);display:flex;align-items:center;justify-content:center;font-weight:700;flex:none}
+.m{font-size:13px;color:var(--mut)}.pr{color:var(--g);font-weight:700;font-size:16px}.ph{height:90px;border-radius:10px}
+.bub{max-width:80%;padding:10px 14px;border-radius:16px;background:var(--soft)}.bub.me{align-self:flex-end;background:var(--g);color:var(--on)}
+.link{border:0;background:none;color:var(--mut);font:500 15px 'DM Sans',sans-serif;min-height:44px;padding:0}
+.fab{position:absolute;right:20px;bottom:64px;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+#app{position:relative}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:90px;background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:20px;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90%;text-align:center;z-index:9}
+.err{color:#C0392B;font-size:14px}
+.thumb{width:100%;object-fit:cover;border-radius:10px;display:block}
+.note{background:var(--soft);border-radius:12px;padding:10px 14px;font-size:14px}
+main>*{flex-shrink:0}
+.chips{flex:none;-webkit-overflow-scrolling:touch}
+.grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.lst{display:flex;flex-direction:column;gap:12px;margin-top:8px;padding-bottom:72px}
+@media(min-width:700px){#app{max-width:720px}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.lst.two{display:grid;grid-template-columns:1fr 1fr;align-content:start}header,main{padding-left:32px;padding-right:32px}.fab{right:32px}}
+@media(min-width:1024px){#app{max-width:1040px;border-left:1px solid var(--bd);border-right:1px solid var(--bd)}.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.lst.two{grid-template-columns:repeat(3,minmax(0,1fr))}}
+:focus-visible{outline:3px solid var(--g);outline-offset:2px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:4px;background:#D6336C;margin-left:5px;vertical-align:middle}
+.tt{min-height:2.8em}.chips.w{flex-wrap:wrap;overflow:visible}
+@media(min-width:1024px){nav{order:-1;border-top:0;border-bottom:1px solid var(--bd)}.fab{bottom:24px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body><div id="app"></div><div id="toast" role="status" aria-live="polite" class="toast"></div>
+<script>
+const COL=['#F2B705','#B5472E','#0B7A4B','#3A5BA0'];
+const CATS=['Tout','Logement','Job','Cours','Beauté','Transport','Démarches'];
+let nid=10;
+const LOGO=n=>`<svg width="${n}" height="${n}" viewBox="0 0 48 48" role="img" aria-label="Logo Nonvi"><rect width="48" height="48" rx="12" fill="var(--g)"/><path d="M14 34V14l20 20V14" fill="none" stroke="var(--on)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="36" cy="12" r="4" fill="#F2B705"/></svg>`;
+const S={tab:'fil',v:'welcome',me:{name:'',city:''},hist:[],fav:[],fo:false,unread:{1:1},q:'',loc:'',near:false,cat:'Tout',typ:'Tout',dt:'Article',cur:null};
+const posts=[
+{n:'Aïcha D.',m:'Paris 18e · il y a 2 h',x:'Quelqu’un connaît un bon traiteur béninois pour un baptême à Saint-Denis ? Merci d’avance !'},
+{n:'Koffi A.',m:'Lyon · il y a 5 h',x:'Soirée retrouvailles samedi à Villeurbanne, ouverte à tous.',tag:'Événement'},
+{n:'Sènami M.',m:'Cotonou · hier',x:'Je rentre en France fin du mois, je peux ramener des colis pour vos proches.',tag:'Diaspora'}];
+const ads=[
+{id:1,k:'Article',t:'Pagne wax 6 yards',p:25,c:'Mode',city:'Paris',d:2,by:'Aïcha D.',x:'Pagne wax neuf, 6 yards, motifs colorés.',col:COL[0]},
+{id:2,k:'Article',t:'Épices du pays',p:8,c:'Alimentation',city:'Lyon',d:465,by:'Koffi A.',x:'Mélange d’épices rapporté du Bénin.',col:COL[1]},
+{id:3,k:'Article',t:'Sac en raphia',p:30,c:'Artisanat',city:'Marseille',d:775,by:'Sènami M.',x:'Sac fait main, très solide.',col:COL[2]},
+{id:4,k:'Article',t:'Huile de palme 1 L',p:9,c:'Alimentation',city:'Lille',d:225,by:'Yves T.',x:'Bouteille d’un litre, disponible tout de suite.',col:COL[3]},
+{id:5,k:'Je propose',t:'Tresses et coiffure à domicile',c:'Beauté',city:'Paris',d:3,by:'Sènami M.',x:'Je me déplace à domicile, sur rendez-vous.'},
+{id:6,k:'J’ai besoin',t:'Cherche une chambre ou une colocation',c:'Logement',city:'Lyon',d:465,by:'Koffi A.',x:'Je cherche dès que possible, quartier calme.'},
+{id:7,k:'Je propose',t:'Restaurant recrute un serveur',c:'Job',city:'Paris',d:6,by:'Yves T.',x:'Poste en soirée, débutant accepté.'},
+{id:8,k:'J’ai besoin',t:'Aide pour un dossier administratif',c:'Démarches',city:'Marseille',d:775,by:'Aïcha D.',x:'Besoin d’aide pour remplir un dossier.'}];
+const chats={1:[{me:0,t:'Bonjour ! Le pagne est toujours disponible.'}]};
+const e=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ini=n=>e(n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase());
+const PIN='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>';
+const $=s=>document.querySelector(s);
+const chip=(a,l,on)=>`<button class="chip${on?' on':''}" aria-pressed="${!!on}" data-a="${a}" data-v="${e(l)}">${e(l)}</button>`;
+const TABS=[['fil','Fil'],['marche','Marché'],['services','Services'],['msg','Messages'],['profil','Profil']];
+const pr=x=>x.p==null?'Échange':x.p===0?'Gratuit':x.p+' €';
+const toast=t=>{const el=$('#toast');el.textContent=t;el.style.opacity=1;clearTimeout(window._t);window._t=setTimeout(()=>el.style.opacity=0,2800)};
+const pic=(x,h)=>x.img?`<img class="thumb" alt="Photo : ${e(x.t)}" src="${x.img}" style="height:${h}px">`:`<div class="ph" role="img" aria-label="Pas de photo" style="height:${h}px;background:${x.col||'var(--soft)'};display:flex;align-items:center;justify-content:center"><span style="background:rgba(0,0,0,.5);color:#fff;padding:2px 10px;border-radius:10px;font-size:13px">${e(x.c)}</span></div>`;
+S.blocked=[];S.rep=[];
+ads.forEach((x,i)=>x.age=['il y a 2 h','il y a 5 h','hier','il y a 2 j','il y a 3 h','hier','il y a 1 j','il y a 4 j'][i]);
+function filt(){
+ const mk=S.tab==='marche';let a=ads.filter(x=>mk?x.k==='Article':x.k!=='Article').filter(x=>!S.blocked.includes(x.by));
+ if(!mk&&S.typ!=='Tout')a=a.filter(x=>x.k===S.typ);
+ if(S.cat==='Mes annonces')a=a.filter(x=>x.by==='Moi');else if(S.cat!=='Tout')a=a.filter(x=>x.c===S.cat);
+ if(S.q)a=a.filter(x=>(x.t+x.x).toLowerCase().includes(S.q.toLowerCase()));
+ if(S.loc)a=a.filter(x=>x.city.toLowerCase().includes(S.loc.toLowerCase()));
+ if(S.near)a=[...a].sort((x,y)=>x.d-y.d);
+ return a}
+const dist=x=>`${e(x.city)}${x.d?' · à '+x.d+' km':''}`;
+function list(){
+ const a=filt(),mk=S.tab==='marche';
+ if(!a.length)return '<div class="m">Aucune annonce pour ces filtres.</div>';
+ if(mk)return '<div class="grid">'+a.map(x=>`<button class="c" data-a="open" data-v="${x.id}" style="padding:8px">${pic(x,90)}<b class="tt">${e(x.t)}</b><span class="pr">${pr(x)}</span><span class="m">${dist(x)}</span></button>`).join('')+'</div>';
+ return a.map(x=>`<button class="c" data-a="open" data-v="${x.id}"><div class="row"><span class="tag ${x.k==='Je propose'?'p':'n'}">${e(x.k)}</span><span class="tag">${e(x.c)}</span></div><b style="font-size:16px">${e(x.t)}</b><span class="m">${dist(x)} · ${e(x.by)}</span></button>`).join('')}
+function filters(){
+ const mk=S.tab==='marche',n=(S.cat!=='Tout')+(!mk&&S.typ!=='Tout');
+ return `${mk?`<input id="q" aria-label="Rechercher un article" placeholder="Rechercher un article" value="${e(S.q)}">`:''}
+ <div class="row"><input id="loc" aria-label="Ville ou code postal" placeholder="Ville ou code postal" value="${e(S.loc)}"><button class="out${S.near?' on':''}" aria-pressed="${S.near}" data-a="near">${PIN}Près de moi</button></div>
+ <button class="out" style="align-self:flex-start" aria-expanded="${S.fo}" data-a="fo">Filtres${n?' · '+n:''}</button>
+ ${S.fo?`<div class="c"><b>Catégorie</b><div class="chips w">${(mk?['Tout','Alimentation','Mode','Artisanat','Mes annonces']:CATS).map(c=>chip('cat',c,S.cat===c)).join('')}</div>${mk?'':`<b>Type d’annonce</b><div class="chips w">${['Tout','Je propose','J’ai besoin'].map(c=>chip('typ',c,S.typ===c)).join('')}</div>`}<button class="link" data-a="rst">Réinitialiser les filtres</button></div>`:''}
+ <div id="list" class="lst${mk?'':' two'}">${list()}</div>
+ <button class="btn fab" aria-label="Publier une annonce" data-a="pub">+ Publier</button>`}
+function fil(){return (S.me.name?`<b style="font-size:18px">Bonjour ${e(S.me.name)} !</b>`:'')+`<div class="row"><input id="np" aria-label="Ton message" placeholder="Partage quelque chose avec la communauté"><button class="out" data-a="post">Publier</button></div>`+
+ posts.map(p=>`<div class="c"><div class="row"><div class="av">${ini(p.n)}</div><div style="flex:1"><b>${e(p.n)}</b><div class="m">${e(p.m)}</div></div>${p.tag?`<span class="tag n">${e(p.tag)}</span>`:''}</div><div>${e(p.x)}</div></div>`).join('')}
+function msg(){const k=Object.keys(chats).filter(i=>!S.blocked.includes(ads.find(a=>a.id==i).by));if(!k.length)return '<div class="m">Aucune conversation. Contacte un membre depuis une annonce.</div>';
+ return k.map(i=>{const x=ads.find(a=>a.id==i),l=chats[i][chats[i].length-1]||{t:'Écris le premier message'};return `<button class="c" data-a="chat" data-v="${i}"><div class="row"><div class="av">${ini(x.by)}</div><div style="flex:1"><b>${e(x.by)}${S.unread[i]?'<span class="dot" role="img" aria-label="nouveau message"></span>':''}</b><div class="m">${e(x.t)}</div></div></div><span class="m">${e(l.t)}</span></button>`}).join('')}
+function profil(){const my=ads.filter(x=>x.by==='Moi'),fv=ads.filter(x=>S.fav.includes(x.id)),nm=S.me.name||'Moi';
+ const lst=a=>a.map(x=>`<button class="c" data-a="open" data-v="${x.id}"><b>${e(x.t)}</b><span class="m">${e(x.k)} · ${dist(x)}</span></button>`).join('');
+ return `<div class="c"><div class="row"><div class="av">${ini(nm)}</div><div><b>${e(nm)}</b><div class="m">${S.me.city?e(S.me.city)+' · ':''}Membre de la communauté</div></div></div></div>
+ <b>Mes annonces (${my.length})</b>${my.length?lst(my):'<div class="m">Tu n’as encore rien publié.</div>'}
+ <b>Enregistrées (${fv.length})</b>${fv.length?lst(fv):'<div class="m">Touche « Enregistrer » sur une annonce pour la retrouver ici.</div>'}
+ ${S.blocked.length?'<b>Membres bloqués</b>'+S.blocked.map(n=>`<div class="row" style="justify-content:space-between"><span>${e(n)}</span><button class="out" data-a="unb" data-v="${e(n)}">Débloquer</button></div>`).join(''):''}
+ <div class="note"><b>Règles de la communauté</b><br>Respect, honnêteté, pas d’arnaque. Rencontre en lieu public et ne paie jamais à l’avance à un inconnu.</div>
+ <div class="m">Nonvi · prototype : les données ne sont pas conservées à la fermeture de la page.</div>`}
+function detail(){const x=ads.find(a=>a.id==S.cur),mine=x.by==='Moi',fv=S.fav.includes(x.id);return `<button class="link" data-a="back">← Retour</button>
+ ${pic(x,180)}
+ <div class="row"><span class="tag ${x.k==='Je propose'?'p':'n'}">${e(x.k)}</span><span class="tag">${e(x.c)}</span></div>
+ <h2 style="margin:0">${e(x.t)}</h2>${x.k==='Article'?`<div class="pr">${pr(x)}</div>`:''}
+ <div>${e(x.x)}</div><div class="m">${dist(x)} · ${e(x.age||'Publié récemment')}</div>
+ <div class="row"><button class="out" aria-pressed="${fv}" data-a="fav" data-v="${x.id}">${fv?'Enregistrée':'Enregistrer'}</button><button class="out" data-a="share" data-v="${x.id}">Partager</button></div>
+ <div class="c"><div class="row"><div class="av">${ini(x.by)}</div><div><b>${e(x.by)}</b><div class="m">Membre · pas encore d’avis</div></div></div></div>
+ ${mine?'':`<button class="btn" data-a="chat" data-v="${x.id}">Contacter</button>
+ <div class="note"><b>Pour ta sécurité</b> : rencontre dans un lieu public, ne paie jamais à l’avance à un inconnu et méfie-toi des offres trop belles.</div>
+ <div class="row"><button class="out" data-a="rep" data-v="${x.id}">Signaler l’annonce</button><button class="out" data-a="blk" data-v="${e(x.by)}">Bloquer ${e(x.by)}</button></div>`}`}
+function welcome(){return `<div style="margin-top:24px">${LOGO(56)}</div><h1 style="font-size:32px;margin:0">Bienvenue sur Nonvi</h1>
+ <p style="margin:0;font-size:16px">Le lieu où la communauté béninoise de France et de la diaspora s’entraide : vendre, proposer un service, retrouver les siens.</p>
+ <div class="c"><b>Comment ça marche</b><div>1. Publie un article, un service ou un besoin.</div><div>2. Trouve des membres près de toi.</div><div>3. Échange par message, puis rencontre-toi en lieu public.</div></div>
+ <div class="note"><b>Nos règles</b> : respect, honnêteté, pas d’arnaque. Les annonces signalées sont examinées.</div>
+ <label>Ton prénom<input id="wn" autocomplete="given-name" placeholder="Ex. Aïcha"></label>
+ <label>Ta ville<input id="wc" autocomplete="address-level2" placeholder="Ex. Paris"></label>
+ <button class="btn" data-a="start">Commencer</button><button class="link" data-a="skip">Explorer d’abord</button>`}
+function chat(){const x=ads.find(a=>a.id==S.cur),m=chats[S.cur]||[];return `<button class="link" data-a="back">← ${e(x.by)} · ${e(x.t)}</button>
+ <div id="msgs" style="flex:1;display:flex;flex-direction:column;gap:8px">${m.map(b=>`<div class="bub${b.me?' me':''}">${e(b.t)}</div>`).join('')}</div>
+ <div class="row"><input id="mt" aria-label="Ton message" placeholder="Écris ton message"><button class="out" data-a="send">Envoyer</button></div>`}
+function pub(){const a=S.dt==='Article';return `<div class="row" style="justify-content:space-between"><button class="link" data-a="back">Annuler</button><b style="font-size:18px">Nouvelle annonce</b><span style="width:56px"></span></div>
+ <div class="row">${['Article','Je propose','J’ai besoin'].map(t=>`<button class="chip${S.dt===t?' on':''}" style="flex:1" data-a="dt" data-v="${e(t)}">${e(t)}</button>`).join('')}</div>
+ <label>Photo (facultatif)<input id="pf" type="file" accept="image/*"></label><div id="pprev">${S.photo?`<img class="thumb" alt="Aperçu de la photo" src="${S.photo}" style="height:140px">`:''}</div>
+ <label>Titre<input id="pt" placeholder="Ex. Pagne wax, cours de maths…"></label>
+ <label>Catégorie<select id="pc">${(a?['Alimentation','Mode','Artisanat','Autre']:CATS.slice(1)).map(c=>`<option>${c}</option>`).join('')}</select></label>
+ ${a?'<label>Prix en € (vide = échange)<input id="pp" inputmode="numeric" placeholder="25"></label>':''}
+ <label>Localisation<input id="pv" placeholder="Ville ou code postal"></label>
+ <label>Description<textarea id="pd" placeholder="Décris ton annonce"></textarea></label>
+ <div class="err" id="pe" role="alert"></div><button class="btn" data-a="submit">Publier l’annonce</button>`}
+function render(){
+ const full=['detail','chat','pub','welcome'].includes(S.v);let h;
+ if(S.v==='welcome')h=welcome();else if(S.v==='detail')h=detail();else if(S.v==='chat')h=chat();else if(S.v==='pub')h=pub();
+ else h={fil,marche:filters,services:filters,msg,profil}[S.tab]();
+ const lab=t=>t[1]+(t[0]==='msg'&&Object.keys(S.unread).length?'<span class="dot" role="img" aria-label="nouveaux messages"></span>':'');
+ $('#app').innerHTML=`${full?'':`<header><div class="row">${LOGO(36)}<h1>Nonvi</h1></div><div class="sub">Communauté béninoise · France &amp; diaspora</div></header>`}<main>${h}</main>${full?'':'<nav aria-label="Navigation principale">'+TABS.map(t=>`<button data-a="tab" data-v="${t[0]}" ${S.tab===t[0]?'aria-current="page"':''} class="${S.tab===t[0]?'on':''}">${lab(t)}</button>`).join('')+'</nav>'}`;
+ const m=$('#msgs');if(m)m.scrollTop=m.scrollHeight;if(S.restore){const mm=$('main');if(mm&&!S.v)mm.scrollTop=S.sc||0;S.restore=false}}
+document.addEventListener('click',ev=>{
+ const b=ev.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,v=b.dataset.v;
+ const go=(nv,cur)=>{S.hist.push({v:S.v,cur:S.cur});S.v=nv;S.cur=cur;try{history.pushState({n:1},'')}catch(_){}};
+ if(a==='tab'){Object.assign(S,{tab:v,v:null,hist:[],q:'',loc:'',near:false,cat:'Tout',typ:'Tout',fo:false})}
+ else if(a==='near'){if(S.near){S.near=false}else if(!navigator.geolocation){toast('Position indisponible : saisis ta ville.');const l=$('#loc');if(l)l.focus();return}else{navigator.geolocation.getCurrentPosition(()=>{S.near=true;S.loc='';render();toast('Annonces triées par distance (distances d’exemple).')},()=>{toast('Position refusée : saisis ta ville ou ton code postal.');const l=$('#loc');if(l)l.focus()},{timeout:8000});return}}
+ else if(a==='cat')S.cat=v;else if(a==='typ')S.typ=v;
+ else if(a==='fo')S.fo=!S.fo;
+ else if(a==='rst'){S.cat='Tout';S.typ='Tout'}
+ else if(a==='open'){S.sc=$('main').scrollTop;go('detail',v)}
+ else if(a==='chat'){chats[v]=chats[v]||[];delete S.unread[v];go('chat',v)}
+ else if(a==='back'){S.restore=true;if(S.hist.length){try{history.back();return}catch(_){const h=S.hist.pop();S.v=h.v;S.cur=h.cur}}else S.v=null}
+ else if(a==='pub'){S.dt=S.tab==='marche'?'Article':'Je propose';S.photo=null;go('pub',S.cur)}
+ else if(a==='dt')S.dt=v;
+ else if(a==='rep'){S.rep.push(v);toast('Annonce signalée. Merci, nous allons l’examiner.')}
+ else if(a==='blk'){S.blocked.push(v);S.v=null;S.hist=[];S.restore=true;toast(v+' est bloqué : ses annonces sont masquées.')}
+ else if(a==='unb'){S.blocked=S.blocked.filter(n=>n!==v);toast('Membre débloqué.')}
+ else if(a==='fav'){S.fav=S.fav.includes(+v)?S.fav.filter(i=>i!==+v):[...S.fav,+v]}
+ else if(a==='share'){const x=ads.find(i=>i.id==v);if(navigator.share){navigator.share({title:x.t,url:location.href}).catch(()=>{})}else{try{navigator.clipboard.writeText(location.href);toast('Lien copié.')}catch(_){toast('Copie impossible sur cet appareil.')}}return}
+ else if(a==='start'){S.me={name:$('#wn').value.trim(),city:$('#wc').value.trim()};S.v=null;toast('Bienvenue'+(S.me.name?' '+S.me.name:'')+' !')}
+ else if(a==='skip')S.v=null;
+ else if(a==='post'){const t=$('#np').value.trim();if(!t)return;posts.unshift({n:S.me.name||'Moi',m:'À l’instant',x:t});toast('Message publié')}
+ else if(a==='send'){const t=$('#mt').value.trim();if(!t)return;const id=S.cur;chats[id].push({me:1,t});
+  setTimeout(()=>{chats[id].push({me:0,t:'Réponse automatique du prototype : merci pour ton message.'});if(S.v==='chat'&&S.cur==id)render();else{S.unread[id]=1;const nb=$('nav [data-v="msg"]');if(nb&&!nb.querySelector('.dot'))nb.insertAdjacentHTML('beforeend','<span class="dot" role="img" aria-label="nouveaux messages"></span>')}},1000)}
+ else if(a==='submit'){const t=$('#pt').value.trim();if(!t){$('#pe').textContent='Ajoute un titre pour publier ton annonce.';$('#pt').focus();return}
+  const pv=$('#pp')?$('#pp').value.trim():'',p=pv===''||isNaN(parseFloat(pv))?null:parseFloat(pv);
+  ads.unshift({id:nid++,k:S.dt,t,p,c:$('#pc').value,city:$('#pv').value.trim()||S.me.city||'Paris',d:0,by:'Moi',img:S.photo||null,age:'À l’instant',x:$('#pd').value.trim()||'Pas de description.',col:COL[nid%4]});toast('Annonce publiée');
+  S.tab=S.dt==='Article'?'marche':'services';S.v=null;S.hist=[];S.cat='Tout';S.typ='Tout';S.q='';S.loc='';S.near=false;S.fo=false}
+ render()});
+document.addEventListener('input',ev=>{
+ if(ev.target.id==='q'){S.q=ev.target.value;$('#list').innerHTML=list()}
+ if(ev.target.id==='loc'){S.loc=ev.target.value;S.near=false;$('#list').innerHTML=list()}});
+document.addEventListener('change',ev=>{if(ev.target.id!=='pf')return;const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{S.photo=r.result;$('#pprev').innerHTML=`<img class="thumb" alt="Aperçu de la photo" src="${r.result}" style="height:140px">`};r.readAsDataURL(f)});
+addEventListener('popstate',()=>{const h=S.hist.pop();if(h){S.v=h.v;S.cur=h.cur}else S.v=null;S.restore=true;render()});
+render();
+</script></body></html>
